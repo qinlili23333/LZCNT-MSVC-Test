@@ -18,5 +18,8 @@
     <ClCompile Include="LZCNT.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="InstructionSet.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
