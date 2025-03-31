@@ -14,9 +14,9 @@ bool support_lzcnt;
 int main()
 {
     volatile unsigned i = 0x0FFF'FFFC;
+    
 
-
-    unsigned lzcnt = __lzcnt(i);
+    unsigned lzcnt = _lzcnt_u32(i);
     unsigned lzcnt_bsr = lzcnt_on_bsr(i);
 
     std::cout << " NATIVE LZCNT:" << lzcnt << " LZCNT ON BSR:" << lzcnt_bsr << "\n";
