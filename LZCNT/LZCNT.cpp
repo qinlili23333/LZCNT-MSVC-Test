@@ -2,12 +2,10 @@
 #include <iostream>
 #include <chrono>
 
-unsigned lzcnt_on_bsr(unsigned i);
-unsigned lzcnt_on_bsr64(unsigned long i);
-unsigned lzcnt_on_bsr64_sim(unsigned long i);
-std::chrono::duration<double, std::milli> measureLzcntExecutionTime(unsigned (*fun)(unsigned i));
+unsigned tzcnt_on_bsf(unsigned i);
+unsigned tzcnt_on_bsf64(unsigned long i);
 
-bool support_lzcnt;
+bool support_tzcnt;
 
 
 
@@ -16,42 +14,33 @@ int main()
     volatile unsigned i = 0x0FFF'FFFC;
     
 
-    unsigned lzcnt = _lzcnt_u32(i);
-    unsigned lzcnt_bsr = lzcnt_on_bsr(i);
+    unsigned tzcnt = _tzcnt_u32(i);
+    unsigned tzcnt_bsf = tzcnt_on_bsf(i);
 
-    std::cout << " NATIVE LZCNT:" << lzcnt << " LZCNT ON BSR:" << lzcnt_bsr << "\n";
-
-
-    volatile unsigned long i2 = 0x0;
+    std::cout << " NATIVE TZCNT:" << tzcnt << " TZCNT ON BSR:" << tzcnt_bsf << "\n";
 
 
-    unsigned lzcnt64 = __lzcnt64(i2);
-    unsigned lzcnt_bsr64 = lzcnt_on_bsr64(i2);
+    volatile unsigned long i2 = 0x0FFF00;
 
-    std::cout << " NATIVE LZCNT64:" << lzcnt64 << " LZCNT64 ON BSR:" << lzcnt_bsr64 << "\n";
+
+    unsigned tzcnt64 = _tzcnt_u64(i2);
+    unsigned tzcnt_bsf64 = tzcnt_on_bsf64(i2);
+
+    std::cout << " NATIVE TZCNT64:" << tzcnt64 << " TZCNT64 ON BSR:" << tzcnt_bsf64 << "\n";
 
     return 0;
 }
 
 
-unsigned lzcnt_on_bsr(unsigned i)
+unsigned tzcnt_on_bsf(unsigned i)
 {
-    unsigned long bsr;
-    _BitScanReverse(&bsr, i);
-    return 31-bsr;
+    unsigned long bsf;
+    _BitScanForward(&bsf, i);
+    return bsf;
 }
-unsigned lzcnt_on_bsr64(unsigned long i)
+unsigned tzcnt_on_bsf64(unsigned long i)
 {
-    unsigned long bsr;
-    _BitScanReverse64(&bsr, i);
-    return 63 - bsr;
-}
-unsigned lzcnt_on_bsr64_sim(unsigned long i)
-{
-    unsigned long bsr;
-    if (_BitScanReverse(&bsr, i >> 32))
-        bsr += 32;
-    else
-        _BitScanReverse(&bsr, i & 0xffffffff);
-    return 63 - bsr;
+    unsigned long bsf;
+    _BitScanForward64(&bsf, i);
+    return bsf;
 }
