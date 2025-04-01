@@ -11,7 +11,18 @@ bool support_tzcnt;
 
 int main()
 {
-    volatile unsigned i = 0x0FFF'FFFC;
+#ifdef __LZCNT__
+    std::cout << " LZCNT defined" << "\n";
+#else
+    std::cout << " LZCNT undefined" << "\n";
+#endif
+
+#ifdef __AVX2__
+    std::cout << " AVX2 defined" << "\n";
+#else
+    std::cout << " AVX2 undefined" << "\n";
+#endif
+    volatile unsigned i = 0x0;
     
 
     unsigned tzcnt = _tzcnt_u32(i);
@@ -20,7 +31,7 @@ int main()
     std::cout << " NATIVE TZCNT:" << tzcnt << " TZCNT ON BSR:" << tzcnt_bsf << "\n";
 
 
-    volatile unsigned long i2 = 0x0FFF00;
+    volatile unsigned long i2 = 0x0;
 
 
     unsigned tzcnt64 = _tzcnt_u64(i2);
